@@ -1,0 +1,13 @@
+{% extends 'Sandbox/Layouts/layout1.html.twig' %}
+{# commentaire  #}
+{% set s = 'un code ne générant pas d\'HTML est autorisé' %}   {# ok #}
+
+
+{% block title %}({{ parent() }}) : vue 2 {% endblock %}
+<p>Du code HTML est donc interdit !</p>                        {# NON #}
+
+<!-- du code HTML, fut-ce un commentaire, est interdit -->     {# NON #}
+
+
+{% block titre_principal %}VUE 2{% endblock %}
+{% block vue %}je m'appelle yassine {% endblock %}
