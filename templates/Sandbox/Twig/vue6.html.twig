@@ -1,0 +1,13 @@
+{% extends 'Sandbox/Layouts/layout3.html.twig' %}
+{% block title %}{{parent()}} : VUE 6{% endblock %}
+{% block titre_principal %}Vue 6 : exercices Twig{% endblock %}
+{% block vue %}
+<p>
+je suis {{prenom}} et mon mail est : {{mail}}
+</p>
+<p>
+{{dump(offre)}}
+</p>
+{% endblock %}
+
+
