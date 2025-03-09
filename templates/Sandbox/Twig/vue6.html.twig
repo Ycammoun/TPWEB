@@ -7,6 +7,86 @@ je suis {{prenom}} et mon mail est : {{mail}}
 </p>
 <p>
 {{dump(offre)}}
+<h2>Noms des mentions</h2>
+    <ul>
+    {% for nomCourt, mention in offre.mentions %}
+    <li> {{mention.nom|upper}} {{nomCourt}}
+    {%endfor%}
+    </ul>
+<h2>UE et volume horaire</h2>    
+    <ul>
+    {% for ue in  offre.ues %}
+    <li> {{loop.index}}.{{ue.nom ~ ':' ~ ue.volume}}
+    {%endfor%}
+    </ul>
+ <h2>Tableau complet</h2>
+    <ul>
+        {#  partie 1 : les mentions #}
+        <li>Mentions
+            <ul>
+                {% for nomCourt, mention in offre.mentions %}
+                    {# traitement d'une mention #}
+                    <li>{{ nomCourt }}
+                        <ul>
+                            <li>nom : {{ mention.nom }}</li>
+                            <li>parcours :
+                                <ul>
+                                    {% for parcour in mention.parcours %}
+                                        <li>parcours {{ loop.index }} : {{ parcour }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li>responsable : {{ mention.responsable }}</li>
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {#  partie 2 : les UEs #}
+        <li>UEs
+            <ul>
+                {% for ue in offre.ues %}
+                    {# traitement d'une UE #}
+                    <li>UE {{ loop.index0 }}
+                        <ul>
+                            <li>nom : {{ ue.nom }}</li>
+                            <li>volume : {{ ue.volume }} heure(s)</li>
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+<h2>Nombre de mentions</h2>
+<p> nombre de mention est : {{offre.mentions|length}}  </p>
+{# nombre de mentions (v2) #}
+<h2>Nombre de mentions (v2)</h2>
+    {% set nbMentions = offre.mentions|length %}
+    {% set pluriel = nbMentions > 1 ? 's' : '' %}
+    <p>Il y a {{ nbMentions }} mention{{ pluriel }}</p>
+    
+ <h2>Filtre <code>format</code></h2>
+    {% set ville = 'Poitiers' %}
+    <p>{{ 'Il y avait %d habitants à %s en 1990' | format(78894, ville) }}</p>
+
+<h2>Affichage UES avec condition</h2>
+<ul>
+{% for ue in offre.ues%}
+{% if ue.volume > 30 %}
+<li> {{ue.nom}} {{ue.volume}} </li>
+{%endif%}
+{%endfor%}
+
+</ul>
+<h2>Affichage APP <code>app</code></h2>
+   <code>app.session</code> : {{dump(app.session)}}
+   <code>app.request</code> : {{dump(app.request)}}
+   <code>app.environment</code> : {{dump(app.environment)}}
+   <code>app.debug</code> : {{dump(app.debug)}}
+   <code>app.user</code> : {{dump(app.user)}}
+
+
+
 </p>
 {% endblock %}
 
