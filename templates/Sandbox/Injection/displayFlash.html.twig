@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Flash</title>
+    </head>
+    <body>
+        <h1>Messages flash de type "info"</h1>
+        <ul>
+            {% for msg in app.session.flashBag.get('info') %}
+                <li>{{ msg }}</li>
+            {%else%}
+                <li>aucun message de type info</li> 
+            {% endfor %}
+            {% for msg in app.session.flashBag.get('error') %}
+                <li>{{ msg }}</li>
+            {%else%}
+                <li>aucun message de type error</li> 
+            {% endfor %}
+
+        </ul>
+    </body>
+</html>

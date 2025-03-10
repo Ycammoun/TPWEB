@@ -100,4 +100,5 @@ class ProduitController extends AbstractController
         $this->addFlash('info', 'échec ajout relation produit/magasin');
         return $this->redirectToRoute('produit_view', ['id' => 3]);
     }
+
 }
