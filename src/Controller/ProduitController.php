@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Produit;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,16 +22,16 @@ class ProduitController extends AbstractController
         requirements: ['page' => '[1-9]\d*'],
         defaults: [ 'page' => 0],        // la valeur par défaut ne respecte pas les contraintes
     )]
-    public function listAction(int $page): Response
+    public function listAction(int $page,EntityManagerInterface $em): Response
     {
+        $produits = $em->getRepository(Produit::class)->findAll();
+
+
         $args = array(
             'page' => $page,
-            // pour simuler une requête à la base de données
-            'produits' => array(
-                ['id' => 2, 'denomination' => 'RAM',     'code' => '97558143', "actif" => false],
-                ['id' => 5, 'denomination' => 'souris',  'code' => '35425785', "actif" => true],
-                ['id' => 6, 'denomination' => 'clavier', 'code' => '33278214', "actif" => true],
-            ),
+            'produits' => $produits
+
+
         );
         return $this->render('Produit/list.html.twig', $args);
     }
@@ -40,11 +41,17 @@ class ProduitController extends AbstractController
         name: '_view',
         requirements: ['id' => '[1-9]\d*'],
     )]
-    public function viewAction(int $id): Response
+    public function viewAction(int $id , EntityManagerInterface $em): Response
     {
+        $produit = $em->getRepository(Produit::class)->find($id);
+        if (is_null($produit)) {
+            $this->addFlash('info', 'produit ' . $id . ' inexistant');
+            $this->redirectToRoute('produit_list');
+        }
+
         // simule l'interrogation de la base avec $id
         $args = array(
-            'produit' => ['id' =>$id, 'denomination' => 'souris',  'code' => '35425785', "actif" => true],
+            'produit' => $produit
         );
         return $this->render('Produit/view.html.twig', $args);
     }
@@ -75,8 +82,16 @@ class ProduitController extends AbstractController
         name: '_delete',
         requirements: ['id' => '[1-9]\d*'],
     )]
-    public function deleteAction(int $id): Response
+    public function deleteAction(int $id,EntityManagerInterface $em): Response
     {
+        $produit = $em->getRepository(Produit::class)->find($id);
+        if (is_null($produit)) {
+            $this->addFlash('info', 'produit ' . $id . ' inexistant');
+            throw $this->createNotFoundException('Produit ' . $id . ' inexistant');
+        }
+        $em->remove($produit);
+        $em->flush();
+
         $this->addFlash('info', 'échec suppression produit ' . $id);
         return $this->redirectToRoute('produit_list');
     }

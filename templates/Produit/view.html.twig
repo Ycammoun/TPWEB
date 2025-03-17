@@ -5,11 +5,16 @@
 {% block titre_principal %}{{ parent() }} : détail du produit {{ produit.id }}{% endblock %}
 
 {% block vue %}
+    <p><a href="{{ path('produit_list') }}">vers la liste des produits</a></p>
+
+    {# le produit existe : le cas d'erreur a été traité dans le contrôleur #}
     <ul>
         <li>id : {{ produit.id }}</li>
         <li>dénomination : {{ produit.denomination }}</li>
         <li>code barre : {{ produit.code }}</li>
-        <li>actif : {{ produit.actif ? 'vrai' : 'faux' }}</li>
+        <li>date de création : {{ produit.dateCreation|date }}</li>
+        <li>actif : {{ produit.actif ? 'oui' : 'non' }}</li>
+        <li>descriptif : {{ produit.descriptif }}</li>
     </ul>
 
     {{ dump(produit) }}

@@ -5,6 +5,8 @@
 {% block titre_principal %}{{ parent() }} : liste des produits{% endblock %}
 
 {% block vue %}
+    <p><a href="{{ path('produit_add') }}">ajouter un produit</a></p>
+
     <p>
         {% if page == 0 %}
             affichage de toutes les pages
@@ -16,13 +18,18 @@
     {% if produits|length == 0 %}
         <p>Aucun produit dans la base de données</p>
     {% else %}
-        <ul>
+        <table>
+            <tr><th>dénomination</th><th></th></tr>
             {% for produit in produits %}
-                <li>{{ produit.denomination }} ({{ produit.code }})</li>
+                {% set urlView = path('produit_view', {'id' : produit.id}) %}
+                {% set urlDelete = path('produit_delete', {'id' : produit.id}) %}
+                <tr>
+                    <td><a href="{{ urlView }}">{{ produit.denomination }}</a></td>
+                    <td><a href="{{ urlDelete }}">delete</a></td>
+                </tr>
             {% endfor %}
-        </ul>
+        </table>
     {% endif %}
 
     {{ dump(produits) }}
 {% endblock %}
-
