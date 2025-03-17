@@ -16,6 +16,15 @@
         <li>actif : {{ produit.actif ? 'oui' : 'non' }}</li>
         <li>descriptif : {{ produit.descriptif }}</li>
     </ul>
+<h2>Manuel</h2>
+    {% if produit.manuel is null %}
+        <p>aucun manuel</p>
 
+    {% else %}
+        <p><a href ="{{ produit.manuel.url }}">lien vers manuel</a></p>
+        <li>sommaire : {{ produit.manuel.sommaire is null ? 'pas de sommaire' : produit.manuel.sommaire }}</li>
+
+
+    {% endif %}
     {{ dump(produit) }}
 {% endblock %}

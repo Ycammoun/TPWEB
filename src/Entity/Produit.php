@@ -30,6 +30,10 @@ class Produit
     #[ORM\Column(type: Types::TEXT)]
     private ?string $descriptif = null;
 
+    #[ORM\OneToOne(targetEntity: Manuel::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'id_manuel', referencedColumnName: 'id', nullable: true,unique: true ,options: ['default' => null])]
+    private ?Manuel $manuel = null;
+
     /**
      * Produit constructor.
      */
@@ -37,6 +41,7 @@ class Produit
     {
         $this->dateCreation = new \DateTime();
         $this->actif = false;
+        $this->manuel = null;
     }
 
     public function getId(): ?int
@@ -100,6 +105,18 @@ class Produit
     public function setDescriptif(string $descriptif): static
     {
         $this->descriptif = $descriptif;
+
+        return $this;
+    }
+
+    public function getManuel(): ?Manuel
+    {
+        return $this->manuel;
+    }
+
+    public function setManuel(?Manuel $manuel): static
+    {
+        $this->manuel = $manuel;
 
         return $this;
     }
