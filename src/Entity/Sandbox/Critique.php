@@ -59,14 +59,14 @@ class Critique
         return $this;
     }
 
-    public function getFil(): ?Film
+    public function getFilm(): ?Film
     {
         return $this->film;
     }
 
-    public function setFil(?Film $film): static
+    public function setFilm(?Film $film): static
     {
-        $this->fil = $film;
+        $this->film = $film;
 
         return $this;
     }
