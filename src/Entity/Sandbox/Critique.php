@@ -17,13 +17,21 @@ class Critique
     private ?int $id = null;
 
     #[ORM\Column(nullable: true,options: ['default' => null, 'comment'=> 'entre 0 et 5'],)]
+    #[Assert\note(
+        min: 0,
+        max: 5,
+    )]
     private ?int $note = null;
 
     #[ORM\Column(type: Types::TEXT ,length: 255)]
+    #[Assert\lengh(
+        max: 255,)]
     private ?string $avis = null;
 
     #[ORM\ManyToOne(targetEntity: Film::class,inversedBy: 'critiques')]
     #[ORM\JoinColumn(name: 'id_film',nullable: false)]
+    #[Assert\Valid]
+    #[Assert\NotNull]
     private ?Film $film = null;
 
     public function __construct(){

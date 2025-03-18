@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Entity\Sandbox;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
+
 
 use App\Repository\Sandbox\FilmRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,19 +22,41 @@ class Film
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
+    #[Assert\NotBlank]
+    #[Assert\Lengh(
+        max : 200,
+        maxMessage: 'La taille du titre est trop grande ; la limite est {{ limit }}',
+
+
+    )]
     private ?string $titre = null;
 
     #[ORM\Column(options: ['comment'=>'année de sortie'])]
-    // le paramètre "name" n'est pas précisé, le nom du champ sera celui du membre : "annee"
-    // le paramètre "type" n'est pas précisé, ce sera celui correspondant à 'int' : "integer"
+    #[Assert\Range(
+        minMessage: 'Avant {{ limit }} le cinéma n\'existait pas',
+        min: 1850,
+    )]
+    #[Assert\Range(
+        maxMessage: '{{ value }} est trop loin dans le futur, après {{ limit }} ...',
+        max: 2053,
+    )]
     private ?int $annee = null;
 
     #[ORM\Column(name: 'enstock', type: Types::BOOLEAN, options: [ 'default' => true])]
-    // paramètre "name" inutile ici car c'est déjà la valeur par défaut (c'est pour l'exemple)
-    // idem pour le paramètre "type" (Types::BOOLEAN vaut 'boolean')
+    #[Assert\Type(
+        type: 'boolean',
+        message: '{{ value }} n\'est pas de type {{ type }}',
+    )]
+
     private ?bool $enstock = null;
 
     #[ORM\Column]
+    #[Assert\Range(
+        notInRangeMessage: 'le prix doit être compris entre {{ min }} et {{ max }}',
+        min: 1,
+        max: 9999.99,
+    )]
+
     private ?float $prix = null;
 
     #[ORM\Column(nullable: true)]
@@ -40,6 +66,7 @@ class Film
      * @var Collection<int, Critique>
      */
     #[ORM\OneToMany(targetEntity: Critique::class, mappedBy: 'film')]
+    #[ASSERT\Valid]
     private Collection $critiques;
 
 
@@ -147,5 +174,18 @@ class Film
         }
 
         return $this;
+    }
+    #[Assert\Callback]
+    public function verifStock(ExecutionContextInterface $context): void
+    {
+        if (   (($this->enstock === false) && (is_null($this->quantite) || ($this->quantite > 0)))
+            || (($this->enstock === true) && (! is_null($this->quantite)) && ($this->quantite <= 0)))
+        {
+            $context
+                ->buildViolation('incohérence entre quantite et enstock')
+                ->atPath('quantite')
+                ->addViolation();
+        }
+
     }
 }
